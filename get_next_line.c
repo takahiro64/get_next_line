@@ -5,54 +5,130 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: thine <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/26 13:22:29 by thine             #+#    #+#             */
-/*   Updated: 2024/11/02 19:07:29 by thine            ###   ########.fr       */
+/*   Created: 2024/11/05 16:03:57 by thine             #+#    #+#             */
+/*   Updated: 2024/11/05 16:04:01 by thine            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"get_next_line.h"
+#include "get_next_line_bonus.h"
+
+char	*del_buf(char *buf)
+{
+	char	*tmp;
+	size_t	i;
+
+	if (!buf)
+		return (NULL);
+	i = 0;
+	while (buf[i] && buf[i] != '\n')
+		i++;
+	if (buf[i] == '\n')
+		i++;
+	if (i == ft_strlen(buf))
+	{
+		free(buf);
+		return (NULL);
+	}
+	tmp = malloc(ft_strlen(buf) - i + 1);
+	if (!tmp)
+	{
+		free(buf);
+		return (NULL);
+	}
+	ft_memcpy(tmp, buf + i, ft_strlen(buf) - i);
+	free(buf);
+	return (tmp);
+}
+
+char	*read_line(char *buf)
+{
+	int		i;
+	char	*line;
+
+	i = 0;
+	if (!buf)
+		return (NULL);
+	while (buf[i] && buf[i] != '\n')
+		i++;
+	if (buf[i] == '\n')
+		i++;
+	line = malloc(i + 1);
+	if (!line)
+		return (NULL);
+	ft_memcpy(line, buf, i);
+	line[i] = '\0';
+	return (line);
+}
+
+char	*read_file(char *res, int fd)
+{
+	char	*buf;
+	int		byte_read;
+
+	if (!res)
+	{
+		res = ft_calloc(1, 1);
+		if (!res)
+			return (NULL);
+	}
+	while (1)
+	{
+		buf = malloc(BUFFER_SIZE + 1);
+		if (!buf)
+		{
+			free(res);
+			return (NULL);
+		}
+		byte_read = read(fd, buf, BUFFER_SIZE);
+		res = strcat_free(res, buf, byte_read);
+		if (!res && byte_read != 0)
+			return (NULL);
+		if (ft_strchr(res, '\n') || byte_read == 0)
+			break ;
+	}
+	return (res);
+}
+
+char	*strcat_free(char *res, char *buf, int buf_size)
+{
+	int	res_size;
+
+	if (buf_size < 0)
+	{
+		free(res);
+		free(buf);
+		return (NULL);
+	}
+	if (buf_size == 0)
+	{
+		free(buf);
+		if (*res)
+			return (res);
+		free(res);
+		return (NULL);
+	}
+	res = ft_realloc(res, (res_size = ft_strlen(res)) + buf_size + 1);
+	if (!res)
+	{
+		free(buf);
+		return (NULL);
+	}
+	ft_memcpy(res + res_size, buf, buf_size);
+	free(buf);
+	return (res);
+}
 
 char	*get_next_line(int fd)
 {
-	t_line_reader	lr;
+	static char	*buf[5000];
+	char		*line;
 
-	lr.len = 0;
-	lr.capa = 1024;
-	lr.str = ft_calloc(lr.capa, sizeof(char));
-	lr.c = ft_getc(fd);
-	while (lr.c != '\n')
-	{
-		if (lr.c == EOF)
-		{
-			if (*(lr.str))
-				return (lr.str);
-			free(lr.str);
-			return (NULL);
-		}
-		if (++lr.len + 1 > lr.capa)
-		{
-			//lr.capa *= 2;
-			//lr.str = ft_strdup(lr.str, lr.capa);
-			lr.capa = ft_realloc(&lr.str, lr.capa);
-		}
-		lr.str[lr.len - 1] = lr.c;
-		lr.c = ft_getc(fd);
-	}
-	lr.str[lr.len] = '\n';
-	lr.str[lr.len + 1] = '\0';
-	return (lr.str);
-}
-
-int	ft_getc(int fd)
-{
-	static t_list	buf;
-
-	if (buf.n == 0)
-	{
-		buf.n = read(fd, buf.buf, BUFFER_SIZE);
-		buf.bufp = buf.buf;
-	}
-	if (--buf.n >= 0)
-		return ((unsigned char) *(buf.bufp++));
-	return (EOF);
+	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE > INT_MAX)
+		return (NULL);
+	buf[fd] = read_file(buf[fd], fd);
+	if (!buf[fd])
+		return (NULL);
+	line = read_line(buf[fd]);
+	buf[fd] = del_buf(buf[fd]);
+	return (line);
 }

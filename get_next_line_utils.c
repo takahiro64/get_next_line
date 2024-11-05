@@ -5,12 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: thine <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/31 09:42:20 by thine             #+#    #+#             */
-/*   Updated: 2024/11/02 19:13:50 by thine            ###   ########.fr       */
+/*   Created: 2024/11/05 16:04:08 by thine             #+#    #+#             */
+/*   Updated: 2024/11/05 16:04:10 by thine            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"get_next_line.h"
+#include "get_next_line_bonus.h"
 
 void	*ft_memcpy(void *dst, const void *src, size_t n)
 {
@@ -27,43 +27,68 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 			n--;
 		}
 	}
+	*ptr = '\0';
 	return (dst);
 }
 
-char	*ft_strdup(char *s1, size_t capa)
+size_t	ft_strlen(const char *s)
 {
-	char	*s2;
+	size_t	len;
 
-	s2 = NULL;
-	s2 = (char *)malloc((sizeof(char)) * capa);
-	if (!s2)
-		return (NULL);
-	ft_memcpy (s2, s1, capa / 2);
-	free (s1);
-	return (s2);
+	len = 0;
+	while (s[len])
+		len++;
+	return (len);
 }
 
-int	ft_realloc(char **str, size_t capa)
+char	*ft_strchr(const char *s, int c)
+{
+	if (!s)
+		return (NULL);
+	if (*s == (char)c)
+		return ((char *)s);
+	while (*s)
+	{
+		s++;
+		if (*s == (char)c)
+			return ((char *)s);
+	}
+	return (NULL);
+}
+
+void	*ft_realloc(char *str, size_t capa)
 {
 	char	*tmp;
 
-	tmp = (char *)malloc((sizeof(char)) * capa * 2);
+	if (!str)
+	{
+		str = malloc(capa);
+		return (str);
+	}
+	tmp = (char *)malloc(capa);
 	if (!tmp)
 	{
-		*str = NULL;
-		return (capa);
+		free(str);
+		return (NULL);
 	}
-	ft_memcpy (tmp, *str, capa);
-	free (*str);
-	*str = malloc(sizeof(char) * capa * 2);
-	ft_memcpy (*str, tmp, capa);
-	free (tmp);
-	return (capa * 2);
+	ft_memcpy(tmp, str, ft_strlen(str));
+	free(str);
+	str = malloc(capa);
+	if (!str)
+	{
+		free(tmp);
+		return (NULL);
+	}
+	ft_memcpy(str, tmp, ft_strlen(tmp));
+	free(tmp);
+	return (str);
 }
 
 void	*ft_calloc(size_t count, size_t size)
 {
-	void	*pmem;
+	void			*pmem;
+	unsigned char	*ptr;
+	size_t			n;
 
 	if (count == 0 || size == 0)
 		return (malloc(0));
@@ -72,18 +97,12 @@ void	*ft_calloc(size_t count, size_t size)
 	pmem = malloc(count * size);
 	if (!pmem)
 		return (NULL);
-	ft_bzero(pmem, count * size);
-	return (pmem);
-}
-
-void	ft_bzero(void *s, size_t n)
-{
-	unsigned char	*ptr;
-
-	ptr = (unsigned char *) s;
+	n = count * size;
+	ptr = (unsigned char *)pmem;
 	while (n != 0)
 	{
 		*ptr++ = 0;
 		n--;
 	}
+	return (pmem);
 }

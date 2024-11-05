@@ -6,11 +6,11 @@
 /*   By: thine <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 13:06:29 by thine             #+#    #+#             */
-/*   Updated: 2024/11/04 13:49:23 by thine            ###   ########.fr       */
+/*   Updated: 2024/11/05 16:10:16 by thine            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"get_next_line_bonus.h"
+#include "get_next_line_bonus.h"
 
 void	*ft_memcpy(void *dst, const void *src, size_t n)
 {
@@ -43,69 +43,66 @@ size_t	ft_strlen(const char *s)
 
 char	*ft_strchr(const char *s, int c)
 {
+	if (!s)
+		return (NULL);
 	if (*s == (char)c)
-		return ((char *) s);
+		return ((char *)s);
 	while (*s)
 	{
 		s++;
-		if (*s == (char) c)
+		if (*s == (char)c)
 			return ((char *)s);
 	}
 	return (NULL);
 }
 
-int	ft_realloc(char **str, size_t capa)
+void	*ft_realloc(char *str, size_t capa)
 {
 	char	*tmp;
 
-	if (!*str)
+	if (!str)
 	{
-		*str = malloc(capa);
-		return (capa);
+		str = ft_calloc(capa, 1);
+		return (str);
 	}
-	printf("realloc start\n");
-	tmp = (char *)malloc(capa);
+	tmp = (char *)ft_calloc(capa, 1);
 	if (!tmp)
 	{
-		*str = NULL;
-		return (capa);
+		free(str);
+		return (NULL);
 	}
-	printf("flag1\n");
-	ft_memcpy (tmp, *str, ft_strlen(*str));
-	printf("flag2\n");
-	free (*str);
-	printf("flag3\n");
-	*str = malloc(capa);
-	ft_memcpy (*str, tmp, ft_strlen(*str));
-	printf("flag4\n");
-	free (tmp);
-	return (capa);
+	ft_memcpy(tmp, str, ft_strlen(str));
+	free(str);
+	str = ft_calloc(capa, 1);
+	if (!str)
+	{
+		free(tmp);
+		return (NULL);
+	}
+	ft_memcpy(str, tmp, ft_strlen(tmp));
+	free(tmp);
+	return (str);
 }
 
-char	*ft_strjoin(char *res, char *buf, int buf_size)
+void	*ft_calloc(size_t count, size_t size)
 {
-	int	res_size;
+	void			*pmem;
+	unsigned char	*ptr;
+	size_t			n;
 
-	printf("strjoin start\n");
-	if (buf_size < 0)
-	{
-		free(res);
-		free(buf);
+	if (count == 0 || size == 0)
+		return (malloc(0));
+	if (size && count >= SIZE_MAX / size)
 		return (NULL);
-	}
-	printf("flag1\n");
-	res_size = ft_strlen(res);
-	ft_realloc(res, res_size + buf_size + 1);
-	printf("flag2\n");
-	if (!res)
-	{
-		free(buf);
+	pmem = malloc(count * size);
+	if (!pmem)
 		return (NULL);
+	n = count * size;
+	ptr = (unsigned char *)pmem;
+	while (n != 0)
+	{
+		*ptr++ = 0;
+		n--;
 	}
-	ft_memcpy(res + res_size, buf, buf_size);	
-	printf("flag3\n");
-	res[ft_strlen(res)] = '\0';
-	free(buf);
-	printf("flag4\n");
-	return (res);
+	return (pmem);
 }
