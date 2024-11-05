@@ -140,7 +140,7 @@ char	*get_next_line(int fd)
 //
 //	fd = open("files/big_line_no_nl", O_RDONLY);
 //	s = get_next_line(fd);
-//	if (strcmp(s,NULL) == 0)
+//	if (strcmp(s,NULL) == )
 //		printf("ok\n");
 //	printf("%s\n", s);
 //	free(s);
