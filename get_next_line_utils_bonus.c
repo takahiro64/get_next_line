@@ -6,7 +6,7 @@
 /*   By: thine <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 13:06:29 by thine             #+#    #+#             */
-/*   Updated: 2024/11/05 16:10:16 by thine            ###   ########.fr       */
+/*   Updated: 2024/11/07 13:42:32 by thine            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,6 @@ void	*ft_realloc(char *str, size_t capa)
 {
 	char	*tmp;
 
-	if (!str)
-	{
-		str = ft_calloc(capa, 1);
-		return (str);
-	}
 	tmp = (char *)ft_calloc(capa, 1);
 	if (!tmp)
 	{

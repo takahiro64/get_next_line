@@ -6,7 +6,7 @@
 /*   By: thine <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 10:01:31 by thine             #+#    #+#             */
-/*   Updated: 2024/11/05 16:19:42 by thine            ###   ########.fr       */
+/*   Updated: 2024/11/07 13:50:40 by thine            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*del_buf(char *buf)
 	if (i == ft_strlen(buf))
 	{
 		free(buf);
-		return (NULL);
+		return (ft_calloc(1, 1));
 	}
 	tmp = malloc(ft_strlen(buf) - i + 1);
 	if (!tmp)
@@ -130,26 +130,10 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = read_line(buf[fd]);
 	buf[fd] = del_buf(buf[fd]);
+	if (!buf[fd])
+	{
+		free(line);
+		return (NULL);
+	}
 	return (line);
 }
-
-// int	main(void)
-//{
-//	char	*s;
-//	int		fd;
-//
-//	fd = open("files/big_line_no_nl", O_RDONLY);
-//	s = get_next_line(fd);
-//	if (strcmp(s,NULL) == )
-//		printf("ok\n");
-//	printf("%s\n", s);
-//	free(s);
-//	close(fd);
-//	fd = open("files/big_line_with_nl", O_RDONLY);
-//	s = get_next_line(fd);
-//	if (strcmp(s,NULL) == 0)
-//		printf("ok\n");
-//	printf("%s\n", s);
-//	free(s);
-//	close(fd);
-//}

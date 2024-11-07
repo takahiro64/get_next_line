@@ -6,11 +6,11 @@
 /*   By: thine <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 16:03:57 by thine             #+#    #+#             */
-/*   Updated: 2024/11/05 16:04:01 by thine            ###   ########.fr       */
+/*   Updated: 2024/11/07 13:56:42 by thine            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line_bonus.h"
+#include "get_next_line.h"
 
 char	*del_buf(char *buf)
 {
@@ -27,7 +27,7 @@ char	*del_buf(char *buf)
 	if (i == ft_strlen(buf))
 	{
 		free(buf);
-		return (NULL);
+		return (ft_calloc(1, 1));
 	}
 	tmp = malloc(ft_strlen(buf) - i + 1);
 	if (!tmp)
@@ -130,5 +130,10 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = read_line(buf[fd]);
 	buf[fd] = del_buf(buf[fd]);
+	if (!buf[fd])
+	{
+		free(line);
+		return (NULL);
+	}
 	return (line);
 }

@@ -6,11 +6,11 @@
 /*   By: thine <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 16:04:08 by thine             #+#    #+#             */
-/*   Updated: 2024/11/05 16:04:10 by thine            ###   ########.fr       */
+/*   Updated: 2024/11/07 13:57:02 by thine            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line_bonus.h"
+#include "get_next_line.h"
 
 void	*ft_memcpy(void *dst, const void *src, size_t n)
 {
@@ -60,12 +60,7 @@ void	*ft_realloc(char *str, size_t capa)
 {
 	char	*tmp;
 
-	if (!str)
-	{
-		str = malloc(capa);
-		return (str);
-	}
-	tmp = (char *)malloc(capa);
+	tmp = (char *)ft_calloc(capa, 1);
 	if (!tmp)
 	{
 		free(str);
@@ -73,7 +68,7 @@ void	*ft_realloc(char *str, size_t capa)
 	}
 	ft_memcpy(tmp, str, ft_strlen(str));
 	free(str);
-	str = malloc(capa);
+	str = ft_calloc(capa, 1);
 	if (!str)
 	{
 		free(tmp);

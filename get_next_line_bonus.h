@@ -6,7 +6,7 @@
 /*   By: thine <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 12:16:55 by thine             #+#    #+#             */
-/*   Updated: 2024/11/05 15:29:40 by thine            ###   ########.fr       */
+/*   Updated: 2024/11/07 13:55:50 by thine            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,8 @@
 # endif
 # include <fcntl.h>
 # include <limits.h>
-# include <stddef.h>
 # include <stdint.h>
-# include <stdio.h>
 # include <stdlib.h>
-# include <string.h>
 # include <unistd.h>
 
 char	*del_buf(char *buf);
